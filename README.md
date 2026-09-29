@@ -7,9 +7,13 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #090d12;
-  color: #edf4ff;
+  background: #070c12;
+  color: #edf5ff;
   font-family: Inter, Arial, sans-serif;
+}
+
+body {
+  position: relative;
 }
 
 canvas {
@@ -27,85 +31,142 @@ canvas {
 .hud-panel {
   position: absolute;
   padding: 12px 16px;
-  color: #edf5ff;
-  background: rgba(8, 14, 18, 0.32);
-  border: 1px solid rgba(180, 205, 255, 0.2);
   border-radius: 10px;
-  backdrop-filter: blur(2px);
+  background: rgba(12, 18, 26, 0.42);
+  border: 1px solid rgba(178, 206, 255, 0.16);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
   text-transform: uppercase;
-  letter-spacing: 0.08rem;
+  letter-spacing: 0.08em;
   font-size: 12px;
+  line-height: 1.4;
 }
 
-.hud-panel-top-left {
-  top: 18px;
-  left: 18px;
-}
+.hud-panel.left { left: 18px; }
+.hud-panel.right { right: 18px; }
+.hud-panel.bottom { bottom: 18px; }
+.hud-panel:not(.bottom) { top: 18px; }
 
-.hud-panel-top-right {
-  top: 18px;
-  right: 18px;
-}
-
-.hud-panel-bottom-left {
-  bottom: 18px;
-  left: 18px;
-}
-
-.hud-panel-bottom-right {
-  bottom: 18px;
-  right: 18px;
-  min-width: 170px;
-}
-
-.hud-label {
-  display: block;
+.hud-value {
   white-space: pre-line;
   font-weight: 700;
-  line-height: 1.3;
+}
+
+.hud-score {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #e7f0ff;
 }
 
 .crosshair {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   transform: translate(-50%, -50%);
   opacity: 0.9;
 }
 
-.crosshair span {
+.crosshair::before,
+.crosshair::after {
+  content: '';
   position: absolute;
-  background: rgba(255, 255, 255, 0.8);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.85);
   border-radius: 999px;
 }
 
-.crosshair span:first-child {
-  left: 50%;
-  top: 0;
+.crosshair::before {
   width: 2px;
-  height: 18px;
-  transform: translateX(-50%);
+  height: 20px;
 }
 
-.crosshair span:last-child {
-  left: 0;
-  top: 50%;
-  width: 18px;
+.crosshair::after {
+  width: 20px;
   height: 2px;
-  transform: translateY(-50%);
 }
 
 .status-banner {
   position: absolute;
   left: 50%;
-  bottom: 90px;
+  bottom: 88px;
   transform: translateX(-50%);
   min-width: 220px;
   text-align: center;
-  color: #dfefff;
-  font-size: 11px;
-  letter-spacing: 0.16rem;
   text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  color: #dfeaff;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 9, 14, 0.65);
+  z-index: 10;
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.menu-panel {
+  width: min(420px, 80vw);
+  padding: 32px 24px;
+  border-radius: 16px;
+  background: rgba(13, 18, 24, 0.87);
+  border: 1px solid rgba(188, 201, 255, 0.18);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+
+.menu-panel.small {
+  width: min(320px, 78vw);
+}
+
+.menu-panel h1,
+.menu-panel h2 {
+  margin: 0 0 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.menu-panel p {
+  color: rgba(232, 240, 255, 0.78);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-button {
+  appearance: none;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #7aa8ff, #5f7ef2);
+  color: white;
+  cursor: pointer;
+}
+
+.menu-button.secondary {
+  background: rgba(138, 147, 167, 0.18);
+  color: #edf3ff;
+  border: 1px solid rgba(183, 201, 255, 0.15);
 }

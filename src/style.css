@@ -1,15 +1,88 @@
-import './style.css';
-import { Game } from './game/Game';
+export class HUD {
+  public root: HTMLDivElement;
+  private roundEl: HTMLDivElement;
+  private healthEl: HTMLDivElement;
+  private ammoEl: HTMLDivElement;
+  private enemiesEl: HTMLDivElement;
+  private weaponEl: HTMLDivElement;
+  private currencyEl: HTMLDivElement;
+  private scoreEl: HTMLDivElement;
+  public status: HTMLDivElement;
 
-const game = new Game();
+  constructor() {
+    this.root = document.createElement('div');
+    this.root.id = 'hud';
 
-const tick = (time: number) => {
-  const delta = Math.min((time - (tick as any).lastTime) / 1000 || 0.016, 0.033);
-  (tick as any).lastTime = time;
-  game.update(delta);
-  game.render();
-  window.requestAnimationFrame(tick);
-};
+    const topLeft = document.createElement('div');
+    topLeft.className = 'hud-panel left';
+    this.roundEl = document.createElement('div');
+    this.roundEl.className = 'hud-value';
+    topLeft.appendChild(this.roundEl);
 
-(tick as any).lastTime = 0;
-window.requestAnimationFrame(tick);
+    const topRight = document.createElement('div');
+    topRight.className = 'hud-panel right';
+    this.enemiesEl = document.createElement('div');
+    this.enemiesEl.className = 'hud-value';
+    topRight.appendChild(this.enemiesEl);
+
+    const bottomLeft = document.createElement('div');
+    bottomLeft.className = 'hud-panel left bottom';
+    this.healthEl = document.createElement('div');
+    this.healthEl.className = 'hud-value';
+    bottomLeft.appendChild(this.healthEl);
+
+    const bottomRight = document.createElement('div');
+    bottomRight.className = 'hud-panel right bottom';
+    this.weaponEl = document.createElement('div');
+    this.weaponEl.className = 'hud-value';
+    this.ammoEl = document.createElement('div');
+    this.ammoEl.className = 'hud-value';
+    this.currencyEl = document.createElement('div');
+    this.currencyEl.className = 'hud-value';
+    bottomRight.append(this.weaponEl, this.ammoEl, this.currencyEl);
+
+    this.scoreEl = document.createElement('div');
+    this.scoreEl.className = 'hud-score';
+
+    const crosshair = document.createElement('div');
+    crosshair.className = 'crosshair';
+
+    this.status = document.createElement('div');
+    this.status.className = 'status-banner';
+
+    this.root.append(topLeft, topRight, bottomLeft, bottomRight, crosshair, this.status, this.scoreEl);
+    document.body.appendChild(this.root);
+  }
+
+  public setRound(round: number): void {
+    this.roundEl.textContent = `ROUND ${round}`;
+  }
+
+  public setHealth(value: number): void {
+    this.healthEl.textContent = `HEALTH\n${Math.max(0, Math.ceil(value))}`;
+  }
+
+  public setAmmo(current: number, reserve: number): void {
+    this.ammoEl.textContent = `AMMO ${current} / ${reserve}`;
+  }
+
+  public setEnemies(value: number): void {
+    this.enemiesEl.textContent = `REMAINING ${value}`;
+  }
+
+  public setWeapon(name: string): void {
+    this.weaponEl.textContent = name.toUpperCase();
+  }
+
+  public setCurrency(value: number): void {
+    this.currencyEl.textContent = `CREDITS ${value}`;
+  }
+
+  public setScore(value: number): void {
+    this.scoreEl.textContent = `SCORE ${value}`;
+  }
+
+  public setStatus(text: string): void {
+    this.status.textContent = text;
+  }
+}

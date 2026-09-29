@@ -1,0 +1,15 @@
+import './style.css';
+import { Game } from './game/Game';
+
+const game = new Game();
+
+const tick = (time: number) => {
+  const delta = Math.min((time - (tick as any).lastTime) / 1000 || 0.016, 0.033);
+  (tick as any).lastTime = time;
+  game.update(delta);
+  game.render();
+  window.requestAnimationFrame(tick);
+};
+
+(tick as any).lastTime = 0;
+window.requestAnimationFrame(tick);

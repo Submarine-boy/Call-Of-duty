@@ -1,88 +1,173 @@
-export class HUD {
-  public root: HTMLDivElement;
-  private roundEl: HTMLDivElement;
-  private healthEl: HTMLDivElement;
-  private ammoEl: HTMLDivElement;
-  private enemiesEl: HTMLDivElement;
-  private weaponEl: HTMLDivElement;
-  private currencyEl: HTMLDivElement;
-  private scoreEl: HTMLDivElement;
-  public status: HTMLDivElement;
-
-  constructor() {
-    this.root = document.createElement('div');
-    this.root.id = 'hud';
-
-    const topLeft = document.createElement('div');
-    topLeft.className = 'hud-panel left';
-    this.roundEl = document.createElement('div');
-    this.roundEl.className = 'hud-value';
-    topLeft.appendChild(this.roundEl);
-
-    const topRight = document.createElement('div');
-    topRight.className = 'hud-panel right';
-    this.enemiesEl = document.createElement('div');
-    this.enemiesEl.className = 'hud-value';
-    topRight.appendChild(this.enemiesEl);
-
-    const bottomLeft = document.createElement('div');
-    bottomLeft.className = 'hud-panel left bottom';
-    this.healthEl = document.createElement('div');
-    this.healthEl.className = 'hud-value';
-    bottomLeft.appendChild(this.healthEl);
-
-    const bottomRight = document.createElement('div');
-    bottomRight.className = 'hud-panel right bottom';
-    this.weaponEl = document.createElement('div');
-    this.weaponEl.className = 'hud-value';
-    this.ammoEl = document.createElement('div');
-    this.ammoEl.className = 'hud-value';
-    this.currencyEl = document.createElement('div');
-    this.currencyEl.className = 'hud-value';
-    bottomRight.append(this.weaponEl, this.ammoEl, this.currencyEl);
-
-    this.scoreEl = document.createElement('div');
-    this.scoreEl.className = 'hud-score';
-
-    const crosshair = document.createElement('div');
-    crosshair.className = 'crosshair';
-
-    this.status = document.createElement('div');
-    this.status.className = 'status-banner';
-
-    this.root.append(topLeft, topRight, bottomLeft, bottomRight, crosshair, this.status, this.scoreEl);
-    document.body.appendChild(this.root);
-  }
-
-  public setRound(round: number): void {
-    this.roundEl.textContent = `ROUND ${round}`;
-  }
-
-  public setHealth(value: number): void {
-    this.healthEl.textContent = `HEALTH\n${Math.max(0, Math.ceil(value))}`;
-  }
-
-  public setAmmo(current: number, reserve: number): void {
-    this.ammoEl.textContent = `AMMO ${current} / ${reserve}`;
-  }
-
-  public setEnemies(value: number): void {
-    this.enemiesEl.textContent = `REMAINING ${value}`;
-  }
-
-  public setWeapon(name: string): void {
-    this.weaponEl.textContent = name.toUpperCase();
-  }
-
-  public setCurrency(value: number): void {
-    this.currencyEl.textContent = `CREDITS ${value}`;
-  }
-
-  public setScore(value: number): void {
-    this.scoreEl.textContent = `SCORE ${value}`;
-  }
-
-  public setStatus(text: string): void {
-    this.status.textContent = text;
-  }
+* {
+  box-sizing: border-box;
 }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #070c12;
+  color: #edf5ff;
+  font-family: Inter, Arial, sans-serif;
+}
+
+body {
+  position: relative;
+}
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+#hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hud-panel {
+  position: absolute;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(12, 18, 26, 0.42);
+  border: 1px solid rgba(178, 206, 255, 0.16);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.hud-panel.left { left: 18px; }
+.hud-panel.right { right: 18px; }
+.hud-panel.bottom { bottom: 18px; }
+.hud-panel:not(.bottom) { top: 18px; }
+
+.hud-value {
+  white-space: pre-line;
+  font-weight: 700;
+}
+
+.hud-score {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #e7f0ff;
+}
+
+.crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  opacity: 0.9;
+}
+
+.crosshair::before,
+.crosshair::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+}
+
+.crosshair::before {
+  width: 2px;
+  height: 20px;
+}
+
+.crosshair::after {
+  width: 20px;
+  height: 2px;
+}
+
+.status-banner {
+  position: absolute;
+  left: 50%;
+  bottom: 88px;
+  transform: translateX(-50%);
+  min-width: 220px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  color: #dfeaff;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 9, 14, 0.65);
+  z-index: 10;
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.menu-panel {
+  width: min(420px, 80vw);
+  padding: 32px 24px;
+  border-radius: 16px;
+  background: rgba(13, 18, 24, 0.87);
+  border: 1px solid rgba(188, 201, 255, 0.18);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+
+.menu-panel.small {
+  width: min(320px, 78vw);
+}
+
+.menu-panel h1,
+.menu-panel h2 {
+  margin: 0 0 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.menu-panel p {
+  color: rgba(232, 240, 255, 0.78);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-button {
+  appearance: none;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #7aa8ff, #5f7ef2);
+  color: white;
+  cursor: pointer;
+}
+
+.menu-button.secondary {
+  background: rgba(138, 147, 167, 0.18);
+  color: #edf3ff;
+  border: 1px solid rgba(183, 201, 255, 0.15);
+}
+"}]}  as any  ,
